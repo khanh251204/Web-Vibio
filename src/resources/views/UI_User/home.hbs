@@ -1,0 +1,28 @@
+ <div class="container mt-5">
+        <h1 class="mb-4">Danh sách sản phẩm</h1>
+
+        {{#if products}} <!-- Kiểm tra nếu có sản phẩm -->
+        <div class="row">
+            {{#each products}} <!-- Lặp qua từng sản phẩm -->
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img src="{{this.img}}" class="card-img-top" alt="{{this.name}}">
+                    <div class="card-body">
+                        <h5 class="card-title">{{this.name}}</h5>
+                        <p class="card-text">Giá: {{this.price}} VNĐ</p>
+                        <p class="card-text">Kiểu: {{this.style}}</p>
+                        <form action="/cart" method="POST">
+                            <input type="hidden" name="productId" value="{{this._id}}">
+                            <input type="number" name="quantity" min="1" value="1" class="form-control mb-2" style="width: 100px;">
+                            <button type="submit" class="btn btn-primary">Thêm vào giỏ</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+        </div>
+        {{else}}
+        <p>Không có sản phẩm nào.</p>
+        {{/if}}
+
+    </div>

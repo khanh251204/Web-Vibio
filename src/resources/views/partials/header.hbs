@@ -1,0 +1,43 @@
+<div class="container-fluid">
+      
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+            <img src="/img/Logo2.png" alt="" style="width: 30%;margin:2rem;margin-left: 40%;">
+            
+        </a>
+         {{#if User}}
+            <p style="margin-left: 22%; color:#ffff ;">Xin chào, <strong>{{User.username}}!</strong></p>
+          {{/if}}
+        <ul class="" style="list-style-type:none;">
+          
+          {{!-- <li><a href="/" class="nav-link px-2 link-secondary">Home</a></li> --}}
+          <li><a href="/news" class="nav-link px-2 link-dark">Quản lí nhân viên</a></li>
+          <li><a href="/product" class="nav-link px-2 link-dark">Sản phẩm </a></li>
+          
+          
+          <li><a href="/home" class="nav-link px-2 link-dark">Home</a></li>
+          <li><a href="/cart" class="nav-link px-2 link-dark">Cart</a></li>
+          <li class="dropdown">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+        
+            Setting
+          </a>
+          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+            {{#if User}}
+            <p>Chào mừng, {{User.username}}!</p>
+            <form action="/logout" method="POST">
+            <li><a href="/manager" class="nav-link px-2 link-dark">Profile</a></li>
+              <button type="submit" class="dropdown-item">Đăng xuất</button>
+            </form>
+            {{else}}
+            <li><a class="dropdown-item" href="/register">Register</a></li>
+            <li><a class="dropdown-item" href="/">Login</a></li>
+             {{/if}}
+            
+          </ul>
+        </li>
+        </ul>
+
+        
+        
+    
+    </div>

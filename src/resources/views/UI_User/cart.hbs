@@ -1,0 +1,42 @@
+<div class="container mt-5">
+        <h1 class="mb-4">Giỏ hàng</h1>
+
+        {{#if cart.items}} <!-- Kiểm tra xem giỏ hàng có sản phẩm hay không -->
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th>Hình ảnh</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                    <th>Tổng</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each cart.items}} <!-- Lặp qua các sản phẩm trong giỏ -->
+                <tr>
+                    <td>{{this.productId.name}}</td>
+                    <td><img src="{{this.productId.img}}" alt="{{this.productId.name}}" width="100"></td>
+                    <td>{{this.quantity}}</td>
+                    <td>{{this.productId.price}} VNĐ</td>
+                    {{!-- <td>{{this.quantity * this.productId.price}} VNĐ</td> --}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <div class="d-flex justify-content-between">
+            {{!-- <h3>Tổng cộng: 
+                {{#with cart}} 
+                    {{#each items}}
+                        {{#sum quantity productId.price}} <!-- Tính tổng giá trị giỏ hàng -->
+                        {{/sum}}
+                    {{/each}}
+                {{/with}} VNĐ
+            </h3> --}}
+            <a href="/checkout" class="btn btn-success">Thanh toán</a>
+        </div>
+        {{else}}
+        <p>Giỏ hàng của bạn trống.</p>
+        {{/if}}
+    </div>
