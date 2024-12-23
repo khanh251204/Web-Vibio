@@ -73,7 +73,8 @@ mongoose.connect(process.env.MGDB).then(() => {
     console.error('MongoDB connection failed:', err.message);
 });
 
-Router(app)
+Router(app);
+
 
 app.listen(port,()=>{
     console.log(`http://localhost:${port}`);
