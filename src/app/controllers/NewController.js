@@ -24,25 +24,22 @@ class NewController {
     }
     // Xóa người dùng
     async deleteUser(req, res) {
-        const {id} = req.params;  // Lấy id người dùng từ tham số URL
+        const { id } = req.params; // Lấy id người dùng từ tham số URL
         try {
-            // Cập nhật trạng thái người dùng thành 'isDeleted: true'
-            const user = await User.findByIdAndUpdate(
-                id,
-                { delete: true }
-            );
-    
-            if (!user) {
-                return res.status(404).send('Không tìm thấy người dùng');
-            }
-    
-            // Sau khi đánh dấu thành công, chuyển hướng về trang chủ
-            res.redirect('/news');
+          // Xóa người dùng
+          const user = await User.findByIdAndDelete(id);
+      
+          if (!user) {
+            return res.status(404).send('Không tìm thấy người dùng');
+          }
+      
+          // Sau khi xóa thành công, chuyển hướng về trang chủ
+          res.redirect('/news');
         } catch (error) {
-            console.error('Lỗi khi đánh dấu người dùng là đã xóa:', error);
-            res.status(500).send('Có lỗi xảy ra khi đánh dấu người dùng là đã xóa');
+          console.error('Lỗi khi xóa người dùng:', error);
+          res.status(500).send('Có lỗi xảy ra khi xóa người dùng');
         }
-    }
+      }
     
     
 
@@ -56,11 +53,11 @@ class NewController {
 
     // Sửa thông tin người dùng
     async editUser(req, res, next) {
-        const { userId } = req.params;  // Nhận ID người dùng từ tham số URL
+        const { id } = req.params;  // Nhận ID người dùng từ tham số URL
 
         try {
             // Lấy thông tin người dùng cần sửa
-            const user = await User.findById(userId);
+            const user = await User.findById(id);
 
             if (!user) {
                 return res.status(404).json({ message: 'Không tìm thấy người dùng.' });
@@ -76,12 +73,12 @@ class NewController {
 
     // Cập nhật thông tin người dùng
     async updateUser(req, res, next) {
-        const { userId } = req.params;  // Nhận ID người dùng từ tham số URL
+        const { id } = req.params;  // Nhận ID người dùng từ tham số URL
         const { username, email, telephone, role } = req.body; // Lấy dữ liệu từ form sửa
 
         try {
             // Cập nhật thông tin người dùng trong MongoDB
-            await User.findByIdAndUpdate(userId, { username, email, telephone, role });
+            await User.findByIdAndUpdate(id, { username, email, telephone, role });
 
             // Chuyển hướng lại trang danh sách người dùng sau khi cập nhật
             res.redirect('/news');

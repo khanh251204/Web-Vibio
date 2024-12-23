@@ -1,0 +1,19 @@
+<form action="/newEdit/{{user._id}}" method="POST">
+  <label for="username">Tên người dùng:</label>
+  <input type="text" id="username" name="username" value="{{user.username}}">
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email" value="{{user.email}}">
+
+  <label for="telephone">Số điện thoại:</label>
+  <input type="text" id="telephone" name="telephone" value="{{user.telephone}}">
+
+  <label for="role">Vai trò:</label>
+  <select id="role" name="role">
+    <option value="admin" {{#if (eq user.role 'admin')}}selected{{/if}}>Admin</option>
+    <option value="moderator" {{#if (eq user.role 'moderator')}}selected{{/if}}>Moderator</option>
+    <option value="user" {{#if (eq user.role 'user')}}selected{{/if}}>User</option>
+  </select>
+
+  <button type="submit">Cập nhật</button>
+</form>

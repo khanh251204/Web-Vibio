@@ -20,9 +20,9 @@
                 <td>{{this.role}}</td>
                 <td>
                        <!-- Nút sửa -->
-                    <a href="/news/edit/{{this._id}}" class="btn btn-warning">Sửa</a>
+                    <a href="/news/{{this._id}}" class="btn btn-warning">Sửa</a>
                     <!-- Nút xóa, sử dụng method-override để làm cho nó hoạt động như DELETE -->
-                    <form action="/newdelete/{{this._id}}" method="POST" style="display:inline;">
+                    <form action="/newDelete/{{this._id}}" method="POST" style="display:inline;">
                         <button type="submit" class="btn btn-danger">Xóa</button>
                     </form>
                 </td>

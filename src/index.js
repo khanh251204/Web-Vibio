@@ -2,15 +2,15 @@ const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
 const bodyparser = require('body-parser');
+const {engine} = require('express-handlebars');
+const handlebars = require('handlebars')
+const morgan = require('morgan');
+const path = require('path'); 
+const app = express();
+const port = 3050;
 require('dotenv').config();
 
 
-const app = express();
-const port = 3050;
-
-const {engine} = require('express-handlebars');
-const morgan = require('morgan');
-const path = require('path'); 
 // const methodOverride = require('method-override'); 
 
 
@@ -25,7 +25,9 @@ app.use(morgan("combined"))
 app.set('views',path.join(__dirname,'resources/views'))
 
 
-
+handlebars.registerHelper('eq', function(a, b) {
+    return a === b;
+});
 // Handlebars
 app.engine('hbs',engine({
     // Rut ngan file

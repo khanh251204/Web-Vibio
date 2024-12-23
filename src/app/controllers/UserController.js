@@ -1,15 +1,12 @@
 const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-// const dotenv = require('dotenv');
-
-// dotenv.config(); // Tải các biến môi trường
 
 class UserController {
-    register(req, res, next) {
-        res.render('UI/register');
+    register(req, res) {
+        res.render('UI/register', {layout: 'login', title: 'Login'});
     }
     login(req, res) {
-        res.render('UI/login');
+        res.render('UI/login', {layout: 'login', title: 'Login'});
     }
     // [POST] register
         // Xử lý đăng ký người dùng
