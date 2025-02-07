@@ -84,5 +84,42 @@ class cartControllers{
             res.status(500).json({ message: 'Lỗi khi thêm sản phẩm vào giỏ hàng' });
         }
     }
-}
+    async deleteCart(req, res) {
+        try {
+            const {  productId } = req.params;  // cartId: ID của giỏ hàng, productId: ID sản phẩm cần xóa
+            const userId = req.session.userId;  // Lấy ID người dùng từ session (hoặc từ token)
+            console.log("ID Sản phẩm cần xóa: " + productId);
+    
+            if (!userId) {
+                return res.status(404).json({ message: 'Giỏ hàng không tồn tại' });
+            }
+    
+              // Tìm giỏ hàng của người dùng dựa trên userId
+            const cart = await Cart.findOne({ userId: userId });
+
+            if (!cart) {
+                return res.status(404).json({ message: 'Giỏ hàng không tồn tại' });
+            }
+
+            // Tìm sản phẩm trong giỏ hàng và xóa nó
+            const itemIndex = cart.items.findIndex(item => item.productId.toString() === productId);
+
+            if (itemIndex === -1) {
+                return res.status(404).json({ message: 'Sản phẩm không có trong giỏ hàng' });
+            }
+
+            // Xóa sản phẩm khỏi giỏ hàng
+            cart.items.splice(itemIndex, 1);
+
+            // Lưu lại giỏ hàng sau khi xóa sản phẩm
+            await cart.save();
+
+            // Trả về thông báo hoặc điều hướng lại (ở đây là chuyển về trang giỏ hàng)
+            res.redirect('/cart');
+        } catch (error) {
+            console.error('Lỗi khi xóa sản phẩm:', error);
+            res.status(500).json({ message: 'Lỗi khi xóa sản phẩm khỏi giỏ hàng' });
+        }
+    }
+}    
 module.exports = new cartControllers();

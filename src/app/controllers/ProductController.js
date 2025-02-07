@@ -9,10 +9,6 @@ class ProductController {
         res.render('UI/product',{User:us});
     }
 
-    // Hiển thị giỏ hàng của người dùng
-    
-    
-
     // Hiển thị trang chủ với danh sách sản phẩm
     async printProduct(req, res) {
         try {
@@ -56,10 +52,6 @@ class ProductController {
             res.status(500).json({ message: 'Lỗi khi thêm sản phẩm' });
         }
     }
-
-    // Thêm sản phẩm vào giỏ hàng
-    
-
 }
 
 module.exports = new ProductController();

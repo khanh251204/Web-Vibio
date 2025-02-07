@@ -1,4 +1,4 @@
-const newsRouter= require("./news")
+const newsRouter= require("./managerUser")
 const userRouter= require("./User")
 const managerRouter = require("./manager")
 const productRouter = require("./product")

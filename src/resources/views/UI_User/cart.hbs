@@ -19,21 +19,24 @@
                     <td><img src="{{this.productId.img}}" alt="{{this.productId.name}}" width="100"></td>
                     <td>{{this.quantity}}</td>
                     <td>{{this.productId.price}} VNĐ</td>
-                    {{!-- <td>{{this.quantity * this.productId.price}} VNĐ</td> --}}
+                    <td>{{multiply this.quantity  this.productId.price}} VNĐ</td>
+                    <td>
+                        <form action="/cartDelete/{{this.productId._id}}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-danger">Xóa</button>
+                        </form>
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
         </table>
 
         <div class="d-flex justify-content-between">
-            {{!-- <h3>Tổng cộng: 
+            <h3>Tổng cộng: 
                 {{#with cart}} 
-                    {{#each items}}
-                        {{#sum quantity productId.price}} <!-- Tính tổng giá trị giỏ hàng -->
-                        {{/sum}}
-                    {{/each}}
-                {{/with}} VNĐ
-            </h3> --}}
+                    {{sum items}} VNĐ
+                {{/with}}
+            </h3>
+
             <a href="/checkout" class="btn btn-success">Thanh toán</a>
         </div>
         {{else}}

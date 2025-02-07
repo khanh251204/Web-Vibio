@@ -28,6 +28,18 @@ app.set('views',path.join(__dirname,'resources/views'))
 handlebars.registerHelper('eq', function(a, b) {
     return a === b;
 });
+handlebars.registerHelper('multiply', function(a, b) {
+    return a * b;
+});
+handlebars.registerHelper('sum', function (items) {
+    let total = 0;
+    // Lặp qua tất cả các mặt hàng trong giỏ
+    items.forEach(item => {
+        total += item.quantity * item.productId.price;
+    });
+    return total;
+});
+
 // Handlebars
 app.engine('hbs',engine({
     // Rut ngan file
@@ -59,11 +71,9 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
          secure: false,
-         httpOnly: true, 
-         maxAge: 60000*3,
+         maxAge: 60000*25,
          saveUninitialized: true,
          cookie: { secure: false }  
-
     } // Cần cấu hình lại cho HTTPS nếu trên môi trường sản xuất
 }));
 

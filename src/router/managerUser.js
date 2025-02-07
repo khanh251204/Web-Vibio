@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const newController = require('../app/controllers/NewController');
-const { checkLogin2 } = require('./auth');
+const newController = require('../app/controllers/ManagerUseController');
+const { checkLogin2, checkAdmin } = require('./auth');
 
 // Route Hiển thị danh sách người dùng
-router.get('/news', checkLogin2, newController.news);
+router.get('/news', checkLogin2,checkAdmin, newController.user);
 
 // Route xóa người dùng
 router.post('/newDelete/:id', checkLogin2, newController.deleteUser);

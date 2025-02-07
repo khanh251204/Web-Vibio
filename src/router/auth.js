@@ -26,9 +26,14 @@ function checkLogin(req, res, next) {
     }
     next(); // Nếu đã đăng nhập, tiếp tục xử lý request
 }
+async function checkAdmin (req, res, next){
+    if(req.session.userInfo.role && req.session.userInfo.role === 'admin'){
+        return next();
+    }
+    return res.redirect('/product');
+}
 
-
-module.exports = { checkLogin,checkLogin2};
+module.exports = { checkLogin,checkLogin2, checkAdmin};
 
 
 

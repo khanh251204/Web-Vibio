@@ -4,7 +4,7 @@ class NewController {
    
 
     // Hiển thị thông tin người dùng
-    async news(req, res, next) {
+    async user(req, res, next) {
         try {
             // Truy vấn tất cả người dùng từ MongoDB
             const users = await User.find();
@@ -16,7 +16,7 @@ class NewController {
             }
 
             // Render trang news với tất cả người dùng
-            return res.render('UI/news', { users,User:us });
+            return res.render('UI/managerUser', { users, User:us });
         } catch (error) {
             console.error('Lỗi khi truy vấn người dùng:', error);
             return res.status(500).json({ message: 'Đã xảy ra lỗi khi lấy dữ liệu người dùng.' });
