@@ -6,11 +6,8 @@ const handlebars = require('handlebars')
 const morgan = require('morgan');
 const path = require('path'); 
 const app = express();
-const port = 3001;
+const port = 8009;
 require('dotenv').config();
-
-const nodemailer = require('nodemailer');
-const crypto = require('crypto');
 const otpModel = require('./app/models/otp');
 
 
@@ -87,8 +84,6 @@ app.use(session({
 }));
 
 mongoose.connect(process.env.MGDB, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
     ssl: true
   }).then(() => {
     console.log('MongoDB connected successfully');

@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Mở cổng mà ứng dụng Node.js sẽ lắng nghe
-EXPOSE 3001
+EXPOSE 8009
 
 # Chạy ứng dụng Node.js
 CMD ["node", "src/index.js"]
