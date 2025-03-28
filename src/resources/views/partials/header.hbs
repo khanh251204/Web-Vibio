@@ -1,0 +1,53 @@
+<header class="navbar navbar-expand-lg" style="background-color: #28A745;">
+  <div class="container-fluid" >
+    <div class="d-flex flex-wrap align-items-center justify-content-between w-100">
+      <!-- Logo Section -->
+      <a href="/user" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none mx-auto" style="height: 5rem;">
+        <img src="/img/Vibio2.png" alt="Logo" style="width: 60%;">
+      </a>
+
+      <!-- Navbar Links Section -->
+      <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Dashbroad</a></li>
+        <li class="nav-item"><a href="/user" class="nav-link px-2 text-dark">User</a></li>
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Content</a></li>
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Confirm</a></li>
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Ads</a></li>
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Analytics & Report</a></li>
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Suport for user</a></li>
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Sysem</a></li>
+        <li class="nav-item"><a href="/404" class="nav-link px-2 text-dark">Security</a></li>
+      </ul>
+
+      <!-- Search Form Section -->
+      {{!-- <form class="d-flex mb-3 mb-lg-0 mx-auto">
+        <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+      </form> --}}
+
+      <!-- User Dropdown Section -->
+      <div class="dropdown text-end mx-auto">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+          <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="dropdownUser1">
+          {{#if User}}
+            {{!-- <p class="dropdown-item">Chào mừng, <strong>{{User.username}}</strong>!</p> --}}
+            <form action="/logout" method="POST">
+              <li><a href="/profile" class="dropdown-item">Profile</a></li>
+              <button type="submit" class="dropdown-item">Đăng xuất</button>
+            </form>
+          {{else}}
+            <li><a href="/register" class="dropdown-item">Register</a></li>
+            <li><a href="/" class="dropdown-item">Login</a></li>
+          {{/if}}
+        </ul>
+      </div>
+    </div>
+  </div>
+</header>
+ <style>
+    .navbar-nav .nav-link  {
+      color: #fff !important;
+      font-weight: 400;
+    }
+ </style>
