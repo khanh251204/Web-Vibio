@@ -75,7 +75,7 @@ app.use(express.urlencoded({ extended: true })); // Sử dụng middleware tích
 
 // Cấu hình express-session
 app.use(session({
-    secret: 'your-secret-key', // Thay bằng một chuỗi mật khẩu bí mật
+    secret: process.env.SESSION_SECRET, 
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -83,7 +83,7 @@ app.use(session({
          maxAge: 60000*25,
          saveUninitialized: true,
          cookie: { secure: false }  
-    } // Cần cấu hình lại cho HTTPS nếu trên môi trường sản xuất
+    } 
 }));
 
 mongoose.connect(process.env.MGDB).then(() => {
