@@ -86,7 +86,11 @@ app.use(session({
     } 
 }));
 
-mongoose.connect(process.env.MGDB).then(() => {
+mongoose.connect(process.env.MGDB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    ssl: true
+  }).then(() => {
     console.log('MongoDB connected successfully');
 }).catch(err => {
     console.error('MongoDB connection failed:', err.message);
