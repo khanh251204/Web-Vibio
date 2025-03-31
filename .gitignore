@@ -1,4 +1,10 @@
 .env
 node_modules/
-# package-lock.json
-# package.json
+package-lock.json
+package.json
+src/app/models/
+src/middlewares/
+src/public/
+src/resources/
+src/router/
+src/app/controllers/
