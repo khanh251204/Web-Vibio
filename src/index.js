@@ -6,7 +6,7 @@ const handlebars = require('handlebars')
 const morgan = require('morgan');
 const path = require('path'); 
 const app = express();
-const port = 8009;
+const port = 8000;
 require('dotenv').config();
 const otpModel = require('./app/models/otp');
 
@@ -38,6 +38,15 @@ handlebars.registerHelper('formatDate', function(dateString) {
     const hours = String(date.getHours()).padStart(2, '0');
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${day}/${month}/${year} ${hours}:${minutes}`;
+});
+handlebars.registerHelper('formatDateBir', function(dateString) {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()); // Lấy 2 chữ số cuối của năm
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year}`;
 });
 // Handlebars
 app.engine('hbs',engine({
