@@ -13,6 +13,9 @@ class UserController {
         const us = req.session.userId;
         res.render('UI/changePassword',{User:us});
     }
+    forgotPassword(req, res) {
+        res.render('UI/forgotPassword', {layout: 'login', title: 'Forgot Password'});
+    }
     async sendOTP(req,res){
         const { email } = req.body;
         if (!email) {
@@ -31,11 +34,23 @@ class UserController {
             if (error) {
             return res.status(500).json('Lỗi khi gửi OTP: ' + error.message);
             }
-            res.status(200).json({ message: 'OTP đã được gửi đến email của bạn!' });
+            res.status(200).json({success:true, message: 'OTP đã được gửi đến email của bạn!' });
         });
     }
+    async checkOTP(req, res) {
+        const { email, otp } = req.body;
+        if (!email || !otp) {
+            return res.status(400).json({ message: 'Email và OTP là bắt buộc' });
+        }
+        const isValid = otpModel.verifyOTP(email, otp);
+        if (isValid) {
+            return res.status(200).json({ success:true, message: 'OTP hợp lệ' });
+        } else {
+            return res.status(400).json({ success:true, message: 'OTP không hợp lệ' });
+        }
+    }
     async create(req, res, next) {
-        const { username, password, email, telephone, role ,otp} = req.body;
+        const { username, password, email, birthday, gender, role ,otp} = req.body;
         const isOTPValid = await otpModel.verifyOTP(email, otp);  // Kiểm tra OTP với email đã lưu
         if (!isOTPValid) {
             return res.status(400).json({
@@ -43,13 +58,13 @@ class UserController {
             });
         }
         // Kiểm tra dữ liệu đầu vào
-        if (!username || !password || !email || !telephone) {
+        if (!username || !password || !email || !birthday|| !gender) {
             return res.status(400).json({ 
                 message: 'Tất cả các trường là bắt buộc.' 
             });
         }
         // Kiểm tra xem email đã tồn tại trong cơ sở dữ liệu chưa
-        const existingUser = await User.findOne({ email });
+        const existingUser = await User.findOne({ email: email });
         if (existingUser) {
             return res.status(400).json({ 
                 success:false,
@@ -64,6 +79,14 @@ class UserController {
             });
         }
         try {
+            const birthdayDate = new Date(birthday); // Chuyển đổi chuỗi thành đối tượng Date
+            if (isNaN(birthdayDate.getTime())) {
+                return res.status(400).json({ 
+                    success: false, 
+                    message: 'Ngày sinh không hợp lệ.' 
+                });
+            }
+            
             // Mã hóa mật khẩu trước khi lưu vào cơ sở dữ liệu
             const hashedPassword = await bcrypt.hash(password, 10);
             // Gán giá trị role từ body hoặc gán mặc định là 'user'
@@ -73,7 +96,8 @@ class UserController {
                 username,
                 password: hashedPassword,
                 email,
-                telephone,
+                birthday: birthdayDate,
+                gender,
                 role: userRole,  // Gán vai trò người dùng
             });
             await newUser.save();
@@ -112,7 +136,8 @@ class UserController {
         req.session.userInfo = {
             username: user.username, 
             email: user.email,   
-            telephone: user.telephone,
+            birthday:user.birthday,
+            gender: user.gender,
             role: user.role  
         };
         req.session.userId = user._id;
@@ -189,7 +214,27 @@ class UserController {
     }
 
     // CẦN NGHIÊN CỨU THÊM
-
+    async forgotPassworded(req, res) {
+        const { email, password} = req.body;
+        const user = await User.findOne({email: email});
+        try{
+            if (!email) {
+                return res.status(400).json({ message: 'Email là bắt buộc' });
+            }
+            if (!user) {
+                return res.status(400).json({ message: 'Email không tồn tại' });
+            }
+            user.password = await bcrypt.hash(password, 10);
+            await user.save();
+            return res.json({
+                success: true, message: 'Đổi mật khẩu thành công.' 
+            });
+        }catch (error) {
+            console.error('Lỗi khi cập nhật mật khẩu:', error);
+            res.status(500).json({success: false,message: 'Có lỗi xảy ra khi cập nhật mật khẩu'});
+        }
+    }
+        
     // Đổi password 
     async changePassword(req, res) {
         const { password, newPassword } = req.body; // Lấy password từ form  
@@ -230,14 +275,15 @@ class UserController {
         }
         async updateUser(req, res, next) {
             const { id } = req.params;  // Nhận ID người dùng từ tham số URL
-            const { username, email, telephone, role } = req.body; // Lấy dữ liệu từ form sửa
+            const { username, email,birthday, gender, role } = req.body; // Lấy dữ liệu từ form sửa
             try {
                 await User.findByIdAndUpdate(
                     id, 
                     { 
                         username,
                         email,
-                        telephone,
+                        birthday,
+                        gender,
                         role 
                     });
                 res.redirect('/user');
