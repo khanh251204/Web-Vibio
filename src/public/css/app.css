@@ -1,0 +1,69 @@
+@charset "UTF-8";
+body {
+  height: 100%;
+  margin: 0; }
+
+.container1 {
+  position: relative;
+  height: 100%; }
+
+.center {
+  width: 500px;
+  height: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* Căn giữa theo cả 2 chiều */ }
+
+.form-control {
+  width: 384px;
+  height: 49.9px;
+  border: 2px solid #28A745;
+  border-radius: 15px;
+  margin-left: 4rem;
+  transition: box-shadow 0.3s ease-in-out; }
+
+.form-control :focus {
+  box-shadow: 0 0 30px #28A745;
+  transition: box-shadow 0.5s ease-in-out;
+  border-color: transparent; }
+
+.btn-login {
+  width: 325px;
+  height: 58px;
+  margin-left: 5.8rem;
+  font-size: 20px;
+  font-weight: bold;
+  background-color: #28A745;
+  border-radius: 13px;
+  border: none; }
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: none; }
+
+.modal-form-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001; }
+
+.modal-edit {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  width: 500px;
+  display: block; }
+
+.modal-form {
+  width: 100%; }
