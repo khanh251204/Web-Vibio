@@ -1,0 +1,70 @@
+<div class="container">
+    {{!-- <h1 class="mt-5">Chào mừng đến với trang quản lý!</h1>
+    <p>Xin chào, <strong id="username">{{User.username}}</strong></p> --}}
+
+    <div class="mt-4">
+        <h4><strong>THÔNG TIN NGƯỜI DÙNG</strong></h3>
+        <ul class="list-group" style="border: none;">
+            <li class="list-group-item" style="border: none;"><strong>Tên người dùng:</strong> <span id="user-username">{{User.username}}</span></li>
+            <li class="list-group-item" style="border: none;"><strong>Email:</strong> <span id="user-email">{{User.email}}</span></li>
+            <li class="list-group-item" style="border: none;"><strong>Ngày sinh:</strong> <span id="user-telephone">{{formatDateBir User.birthday}}</span></li>
+            <li class="list-group-item" style="border: none;"><strong>Giới tính: </strong> <span id="user-telephone">{{User.gender}}</span></li>
+        </ul>
+        
+    </div>
+    <br>
+    <button class="btn btn-success" id="btn-update" data-userId="{{userId}}" data-username="{{User.username}}">Cập nhật</button>
+    <button class="btn btn-success" onclick="window.location.href='/changePassword'">Đổi mật khẩu</button>
+    
+</div>
+
+
+{{!-- Cập nhật thông tin --}}
+<div id="modal-overlay" class="modal-overlay" style="display:none;"></div>
+<!-- Form Edit tách biệt ra ngoài bảng -->
+<div id="modal-form-container" class="modal-form-container" style="display:none;">
+    <div class="modal-edit">
+        <form id="edit-user-form" action="" method="POST" class="modal-form">
+            <!-- Tên người dùng -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên người dùng:</label>
+                <input type="text" id="username" name="username" class="form-control">
+            </div>
+            {{!-- <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-control">
+            </div>
+            <!-- Số điện thoại -->
+            <div class="mb-3">
+                <label for="telephone" class="form-label">Số điện thoại:</label>
+                <input type="text" id="telephone" name="telephone" class="form-control">
+            </div> --}}
+            <!-- Nút Cập Nhật -->
+            <button class="btn btn-success btn-login" type="submit">Cập nhật</button>
+        </form>
+    </div>
+</div>
+{{!-- Đổi mật khẩu --}}
+
+<script>
+    document.getElementById('btn-update').addEventListener('click', function() {
+        // Hiện modal form
+        document.getElementById('modal-form-container').style.display = 'block';
+        document.getElementById('modal-overlay').style.display = 'block';
+
+        const userId = this.getAttribute('data-userId');
+        const username = this.getAttribute('data-username');
+        document.getElementById('username').value = username;
+        document.getElementById('edit-user-form').action = '/newEdit/' + userId;
+
+
+    });
+    document.getElementById('modal-overlay').addEventListener('click', function() {
+        // Ẩn modal form và overlay khi nhấn vào overlay
+        document.getElementById('modal-form-container').style.display = 'none';
+        document.getElementById('modal-overlay').style.display = 'none';
+    });
+</script>
+
+

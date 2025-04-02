@@ -1,0 +1,182 @@
+<div class="container mt-5">
+    <h1 class="mb-4">Danh sách Người Dùng</h1>
+      <!-- Dropdown lọc vai trò -->
+    <div class="mb-3">
+        <label for="role-filter" class="form-label">Lọc theo Vai trò:</label>
+        <select id="role-filter" class="form-select">
+            <option value="">Tất cả</option>
+            <option value="admin">Admin</option>
+            <option value="moderator">Moderator</option>
+            <option value="user">User</option>
+        </select>
+    </div>
+    {{#if users}} <!-- Kiểm tra nếu có người dùng -->
+    <table class="table table-bordered table-striped">
+        <thead class="table-light">
+            <tr>
+                <th scope="col">Ảnh đại diện</th>
+                <th scope="col">Tên người dùng</th>
+                <th scope="col">Email</th>
+                <th scope="col">Ngày sinh</th>
+                <th scope="col">Giới tính</th>
+                <th scope="col">Vai trò</th>
+                <th scope="col">Ngày tạo</th>
+                <th scope="col">Tình trạng</th>
+                <th scope="col">Chỉnh sửa</th>
+            </tr>
+        </thead>
+        <tbody id="user-table-body">
+            {{#each users}} <!-- Lặp qua tất cả người dùng -->
+                <tr data-role="{{this.role}}">
+                    <td><img src="/img/vector.png" alt="" style="width: 30px;"></td>
+                    <td>{{this.username}}</td>
+                    <td>{{this.email}}</td>
+                    <td>{{formatDateBir this.birthday}}</td>
+                    <td>{{this.gender}}</td>
+                    <td>{{this.role}}</td>
+                    <td>{{formatDate this.createdAt}}</td>
+                    <td>
+                        {{#if (eq this.delete true)}}
+                            Khóa
+                        {{else}}
+                            Hoạt động
+                        {{/if}}
+                    </td>
+                    <td >
+                        
+                        <!-- Nút sửa -->
+                        <a class="btn btn-warning btn-edit" data-user-id="{{this._id}}" data-username="{{this.username}}" data-email="{{this.email}}" data-birthday="{{ formatDateBir this.birthday}}" data-gender="{{this.gender}}" data-role="{{this.role}}"><i class="bi bi-pencil-square"></i></a>
+                        <!-- Nút xóa -->
+                        {{#if (eq this.delete true)}}
+                            <form action="/unLock/{{this._id}}" method="POST"  id="bnt-unLock"  style="display: inline-block;">
+                                <button type="submit" class="btn btn-danger"><i class="bi bi-unlock"></i></button>
+                            </form>
+                            
+                        {{else}}
+                           <form action="/lock/{{this._id}}" method="POST" id="btn-lock" style="display: inline-block;">
+                                <button type="submit" class="btn btn-danger" ><i class="bi bi-lock"></i></button>
+                            </form>
+                        {{/if}}
+                        
+                    </td>
+                </tr>
+            {{/each}}
+        </tbody>
+
+    </table>
+    {{else}}
+        <p>Không có người dùng nào trong hệ thống.</p>
+    {{/if}}
+</div>
+
+<!-- Modal Overlay -->
+<div id="modal-overlay" class="modal-overlay" style="display:none;"></div>
+
+<!-- Form Edit tách biệt ra ngoài bảng -->
+<div id="modal-form-container" class="modal-form-container" style="display:none;">
+    <div class="modal-edit">
+        <form id="edit-user-form" action="" method="POST" class="modal-form">
+            <!-- Tên người dùng -->
+            <div class="mb-3">
+                <label for="username" class="form-label">Tên người dùng:</label>
+                <input type="text" id="username" name="username" class="form-control">
+            </div>
+            <!-- Email -->
+            <div class="mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" id="email" name="email" class="form-control">
+            </div>
+            <!-- Sinh nhật -->
+            <div class="mb-3">
+                <label for="birthday" class="form-label">Ngày sinh:</label>
+                <input type="date" id="birthday" name="birthday" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="male">Nam</label>
+                <input type="radio" id="male" name="gender" value="Nam">
+                <label for="female">Nữ</label>
+                <input type="radio" id="female" name="gender" value="Nữ">
+                <label for="other">Khác</label>
+                <input type="radio"  id="other" name="gender" value="Khác">
+            </div>
+            <!-- Vai trò -->
+            <div class="mb-3">
+                <label for="role" class="form-label">Vai trò:</label>
+                <select id="role" name="role" class="form-select">
+                    <option value="admin">Admin</option>
+                    <option value="moderator">Moderator</option>
+                    <option value="user">User</option>
+                </select>
+            </div>
+           
+            <!-- Nút Cập Nhật -->
+            <button class="btn btn-success w-100" type="submit">Cập nhật</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Hàm chuyển đổi từ dd/mm/yyyy sang yyyy-mm-dd
+function convertToDateFormat(dateString) {
+    const [day, month, year] = dateString.split('/'); // Tách chuỗi thành day, month, year
+    const formattedDate = new Date(`${year}-${month}-${day}`); // Tạo đối tượng Date từ chuỗi yyyy-mm-dd
+    if (isNaN(formattedDate)) {
+        return ''; // Nếu ngày không hợp lệ, trả về chuỗi rỗng
+    }
+    return formattedDate.toISOString().split('T')[0]; // Chuyển đổi thành yyyy-mm-dd
+}
+    // Hiển thị form chỉnh sửa người dùng khi nhấn vào nút sửa
+    document.querySelectorAll('.btn-edit').forEach((btn) => {
+        btn.addEventListener('click', () => {
+            // Lấy thông tin người dùng từ thuộc tính data
+            const userId = btn.getAttribute('data-user-id');
+            const username = btn.getAttribute('data-username');
+            const email = btn.getAttribute('data-email');
+            const birthday = btn.getAttribute('data-birthday');
+            const formattedBirthday = convertToDateFormat(birthday); // Chuyển đổi định dạng ngày sinh
+            const gender = btn.getAttribute('data-gender');
+            const role = btn.getAttribute('data-role');
+
+            // Điền thông tin vào form chỉnh sửa
+            document.getElementById('username').value = username;
+            document.getElementById('email').value = email;
+            document.getElementById('birthday').value = formattedBirthday;
+            document.querySelector(`[name="gender"][value="${gender}"]`).checked = true;
+
+            document.getElementById('role').value = role;
+
+
+            // Cập nhật action của form với ID người dùng
+            document.getElementById('edit-user-form').action = '/newEdit/' + userId;
+
+            // Hiển thị modal và overlay
+            document.getElementById('modal-form-container').style.display = 'block';
+            document.getElementById('modal-overlay').style.display = 'block';
+        });
+    });
+
+    // Đóng modal khi click vào overlay
+    document.getElementById('modal-overlay').addEventListener('click', () => {
+        document.getElementById('modal-form-container').style.display = 'none';
+        document.getElementById('modal-overlay').style.display = 'none';
+    });
+
+
+
+     // Lọc theo vai trò
+    document.getElementById('role-filter').addEventListener('change', function() {
+        const selectedRole = this.value; // Vai trò được chọn từ dropdown
+        const rows = document.querySelectorAll('#user-table-body tr'); // Lấy tất cả các dòng trong bảng
+
+        rows.forEach((row) => {
+            const role = row.getAttribute('data-role'); // Lấy vai trò của người dùng trong dòng
+            if (selectedRole === "" || role === selectedRole) {
+                row.style.display = ''; // Hiển thị dòng nếu vai trò khớp hoặc không có filter
+            } else {
+                row.style.display = 'none'; // Ẩn dòng nếu vai trò không khớp
+            }
+        });
+    });
+    
+</script>
+

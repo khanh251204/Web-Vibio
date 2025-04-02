@@ -1,0 +1,129 @@
+<div class="container">
+  <div class="center">
+    <form class="form-signin" id="form-signin" >
+      <img src="/img/Vibio.png" alt="" style="width: 119px;margin:0 0 1rem 12rem;">
+      <br>
+      <input type="text" id="inputName" class="form-control" placeholder="User Name" required="" autofocus="" name="username">
+      <br>
+      <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required="" autofocus="" name="email">
+      <br>
+      <input type="date" id="inputBirthday" class="form-control" placeholder="Ngày sinh" required="" autofocus="" name="brithday">
+      
+      <label for="male">Nam</label>
+      <input type="radio" id="male" name="gender" value="Nam">
+      <label for="female">Nữ</label>
+      <input type="radio" id="female" name="gender" value="Nữ">
+      <label for="other">Khác</label>
+      <input type="radio"  id="other" name="gender" value="Khác">
+    
+      <input type="password" id="inputPassword" class="form-control" placeholder="Password" required="" name="password">
+      <br>
+      <input type="password" id="confirmInputPassword" class="form-control" placeholder="Cofirm Password" required="" name="password">
+      <br>
+      <button class="btn btn-login btn-success " type="submit">ĐĂNG KÝ</button>
+      <div class="text-center" style="margin-top: 10px;">
+        <p style="display: inline-block;">Bạn đã có tài khoản?</p> 
+        <a href="/" class="text-success"> Đăng nhập ngay</a> 
+      </div>
+    </form>
+    <div id="otp-section" style="display:none;">
+      {{!-- <label for="otp">Nhập OTP:</label> --}}
+      <input type="text" id="otp" class="form-control" name="otp" required placeholder="Nhập mã OTP">
+      <br>
+      <button id="verify-otp" class="btn btn-success">Xác thực OTP</button>
+    </div>
+
+
+  </div>
+</div>
+        
+<script>
+  document.getElementById('form-signin').addEventListener('submit', function (event) {
+    event.preventDefault();
+    const email = document.getElementById('inputEmail').value;
+    const password = document.getElementById('inputPassword').value;
+    const confirmPassword = document.getElementById('confirmInputPassword').value;
+    if (password !== confirmPassword) {
+      Swal.fire({ 
+        icon: 'error',
+        title: 'Lỗi',
+        text: 'Mật khẩu không khớp. Vui lòng thử lại.',
+      });
+      return;
+    }
+    fetch ('/sendOTP', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ email:email })
+    })
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('otp-section').style.display = 'block';
+      document.getElementById('form-signin').style.display = 'none';
+      
+    }).catch(error => {
+      console.log('Có lỗi '+error);
+    })  
+  })
+  document.getElementById('verify-otp').addEventListener('click', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('inputName').value;
+    const email = document.getElementById('inputEmail').value;
+    const birthday = document.getElementById('inputBirthday').value;
+    const gender = document.querySelector('input[name="gender"]:checked').value;
+    const password = document.getElementById('inputPassword').value;
+    const otp = document.getElementById('otp').value;
+    
+
+             // Gửi yêu cầu xác thực OTP
+             fetch('/create', {
+               method: 'POST',
+               headers: { 'Content-Type': 'application/json' },
+               body: JSON.stringify({ email: email, otp: otp, username: username, birthday:birthday, gender:gender, password: password }) ,
+             })
+             .then(response => {
+                if (!response.ok) { // If the response status is not OK (e.g., 400)
+                  return response.json().then(data => {
+                    // Display error message using SweetAlert2
+                    throw new Error(data.message || 'Đã xảy ra lỗi, vui lòng thử lại.');
+                  });
+                }
+                return response.json(); // Proceed if response is OK
+              })
+             .then(data => {
+               if (data.success){
+                   if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Thành công',
+                    text: data.message || 'Bạn đã đăng nhập thành công.',
+                    timer:2000,
+                    showConfirmButton:false,
+                    willClose:()=>{
+                        window.location.href='/';
+                    }
+                });
+                } else {
+                    // Show error message using SweetAlert2
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi',
+                        text:data.message|| 'Đã xảy ra lỗi, vui lòng thử lại.',
+                    });
+                }
+               }
+              
+             })
+             .catch(error => {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Lỗi kết nối',
+                  text: error.message||'Không thể kết nối đến máy chủ. Vui lòng thử lại sau.',
+                });
+                {{!-- alert(error.message); --}}
+             });
+  });
+</script>
+     
