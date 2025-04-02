@@ -13,15 +13,18 @@ const {checkLogin, checkLogin2} = require('../middlewares/auth');
 router.get('',checkLogin, userController.login);
 router.get('/register',checkLogin, userController.register);
 router.get('/changePassword',checkLogin, userController.changePass);
+router.get('/forgotPassword', userController.forgotPassword);
 
 
 
 // Route cho việc tạo người dùng
 router.post('/create', userController.create); // Sử dụng POST để xử lý dữ liệu từ form
 router.post('/sendOTP', userController.sendOTP); // Sử dụng POST để xử lý dữ liệu từ form
+router.post('/checkOTP', userController.checkOTP); // Sử dụng POST để xử lý dữ liệu từ form
 router.post('/login', userController.logined); // Sử dụng POST để xử lý dữ liệu từ form
 router.post('/logout', userController.logout);
 router.post('/exchangePassword', checkLogin, userController.changePassword);
+router.post('/forgotPassworded', userController.forgotPassworded);
 
 
 
